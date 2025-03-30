@@ -21,7 +21,7 @@ const Footer = () => {
   }, []);
 
   return (
-    <section id="footer-section" className="your-hero-section-styles">
+    <section id="contacu-us" className="your-hero-section-styles">
     <footer className="bg-gray-100 py-10 px-6 md:px-20">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         <div ref={textRef} className={`transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>

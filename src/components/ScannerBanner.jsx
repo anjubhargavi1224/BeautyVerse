@@ -107,11 +107,11 @@ const ScannerBanner = () => {
           <div className="absolute inset-0 bg-black/50"></div>
           <div className="absolute shine-effect"></div>
           <div className="relative z-10 p-6 text-white">
-            <h2 className="text-xl font-semibold">SCAN YOUR FACE</h2>
+            <h2 className="text-xl mt-20 font-semibold">SCAN YOUR FACE</h2>
             <h1 className="text-3xl md:text-4xl font-bold mt-2">
               Achieve flawless skin with our smart facial scanner
             </h1>
-            <button className="mt-4 px-4 py-2 bg-white text-black font-semibold rounded">Explore More</button>
+            <button className="mt-4 px-4 py-2 bg-white text-black font-semibold rounded">Scan Now</button>
           </div>
         </div>
 
@@ -127,7 +127,7 @@ const ScannerBanner = () => {
           <div className="relative z-10 text-black text-center">
             <h2 className="text-xl font-semibold">Virtual Makeup Try-on</h2>
             <p className="mt-2">Scan, analyze, and shop confidently for products that enhance your beauty.</p>
-            <button className="mt-4 px-4 py-2 bg-black text-white font-semibold rounded">Shop Sale</button>
+            <button className="mt-4 px-4 py-2 bg-black text-white font-semibold rounded">Try-On</button>
           </div>
         </div>
       </div>

@@ -22,7 +22,6 @@ const fadeIn = {
   const Dermatologyblog = () => {
     return (
           <div className="min-h-screen bg-[#F4ECE3]">
-            <Navbar />
       <motion.div
         initial="hidden"
         whileInView="visible"

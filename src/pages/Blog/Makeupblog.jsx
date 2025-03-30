@@ -19,7 +19,6 @@ const fadeIn = {
 const Makeupblog = () => {
   return (
     <div className="min-h-screen bg-[#F4ECE3]">
-      <Navbar />
 
     <motion.div
       initial="hidden"

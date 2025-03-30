@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
 
 const questions = [
   { id: "gender", question: "What Is Your Gender?", options: ["Male", "Female"] },
@@ -80,47 +78,88 @@ export default function Questionnaire() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <div className="flex flex-col items-center justify-center flex-grow p-4">
-        <div className="w-full max-w-lg relative mb-6">
-          <div className="w-full h-2 bg-gray-200 rounded-full mt-2">
-            <div className="h-2 bg-blue-500 rounded-full transition-all duration-300" style={{ width: `${progressPercentage}%` }}></div>
-          </div>
+    <div className="flex flex-col items-center justify-center min-h-screen p-4">
+      {/* Progress Bar */}
+      <div className="w-full max-w-lg relative mb-6">
+        <div className="flex justify-between text-gray-600 text-sm">
+          <span>Skin Issues</span>
+          <span>Skin Care</span>
+          <span>Skin Type</span>
+          <span>Complete</span>
         </div>
-
-        {!submitted ? (
-          <motion.div
-            key={currentStep}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
-          >
-            <h2 className="text-xl font-semibold text-center mb-4 text-blue-600">Welcome To Skin Quiz</h2>
-            <p className="text-lg font-medium text-center mb-4">{questions[currentStep].question}</p>
-            <div className="space-y-3">
-              {questions[currentStep].options.map((option) => (
-                <button
-                  key={option}
-                  className={`w-full p-3 border rounded-lg text-lg transition-all duration-200 ${
-                    answers[questions[currentStep].id] === option ? "bg-blue-500 text-white" : "bg-gray-100 hover:bg-gray-200"
-                  }`}
-                  onClick={() => handleSelect(option)}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        ) : (
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center">
-            <h2 className="text-2xl font-bold text-blue-600">Thank You!</h2>
-            <p className="mt-4 text-lg">Your Skin Type: <strong>{result.skinType}</strong></p>
-            <p className="text-lg">Your Skin Condition: <strong>{result.skinCondition}</strong></p>
-          </div>
-        )}
+        <div className="w-full h-2 bg-gray-200 rounded-full mt-2">
+          <div
+            className="h-2 bg-blue-500 rounded-full transition-all duration-300"
+            style={{ width: `${progressPercentage}%` }}
+          ></div>
+        </div>
       </div>
-      <Footer />
+
+      {/* Question Box */}
+      {!submitted ? (
+        <motion.div
+          key={currentStep}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
+        >
+          <h2 className="text-xl font-semibold text-center mb-4 text-blue-600">
+            Welcome To Skin Quiz
+          </h2>
+          <p className="text-lg font-medium text-center mb-4">
+            {questions[currentStep].question}
+          </p>
+
+          {/* Options */}
+          <div className="space-y-3">
+            {questions[currentStep].options.map((option) => (
+              <button
+                key={option}
+                className={`w-full p-3 border rounded-lg text-lg transition-all duration-200 ${
+                  answers[questions[currentStep].id] === option
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-100 hover:bg-gray-200"
+                }`}
+                onClick={() => handleSelect(option)}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        </motion.div>
+      ) : (
+        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center">
+          <h2 className="text-2xl font-bold text-blue-600">Thank You!</h2>
+          <p className="mt-4 text-lg">
+            Your Skin Type: <strong>{result.skinType}</strong>
+          </p>
+          <p className="text-lg">
+            Your Skin Condition: <strong>{result.skinCondition}</strong>
+          </p>
+        </div>
+      )}
+
+      {/* Navigation Buttons */}
+      {!submitted && (
+        <div className="flex justify-between w-full max-w-md mt-6">
+          <button
+            className={`p-3 px-6 rounded-lg text-white bg-gray-400 transition-all duration-200 ${
+              currentStep === 0 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-500"
+            }`}
+            onClick={handleBack}
+            disabled={currentStep === 0}
+          >
+            Back
+          </button>
+          <button
+            className="p-3 px-6 rounded-lg text-white bg-blue-500 hover:bg-blue-600"
+            onClick={handleNext}
+          >
+            {currentStep === totalQuestions - 1 ? "Submit" : "Next"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

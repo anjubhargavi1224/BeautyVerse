@@ -62,7 +62,7 @@ const FAQ = () => {
 
       {/* Ask Question Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+        <div className="fixed inset-0 mt-10 bg-black bg-opacity-40 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full transition transform scale-100">
             <h3 className="text-2xl font-semibold text-center mb-4">
               {isSubmitted ? "Query Received" : "Ask Your Query"}

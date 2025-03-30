@@ -1,76 +1,130 @@
+import { useState, useEffect } from "react";
 import { FiSearch } from "react-icons/fi";
 import { IonIcon } from "@ionic/react";
 import { personOutline, starOutline } from "ionicons/icons";
-import { Link as RouterLink, useLocation } from "react-router-dom";
-import logo from "../assets/logo.png"; // Import your logo
+import { Link as RouterLink } from "react-router-dom";
+import { Link as ScrollLink } from "react-scroll";
+import { auth } from "../components/Firebase";
+import logo from "../assets/logo.png";
+import Login from "../pages/Login/Login";
 
-const Navbar = () => {
-  const location = useLocation(); // Get current page URL
+const Navbar = ({ user }) => {
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isFavoritesOpen, setIsFavoritesOpen] = useState(false);
+  const [favorites, setFavorites] = useState([]);
 
-  // Function to handle navigation
-  const handleNavigation = (section) => {
-    if (location.pathname !== "/") {
-      // If not on Home Page, first navigate to "/"
-      window.location.href = `/#${section}`;
-    } else {
-      // If on Home Page, just scroll smoothly
-      document.getElementById(section)?.scrollIntoView({ behavior: "smooth" });
-    }
+  useEffect(() => {
+    const updateFavorites = () => {
+      const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+      setFavorites(storedFavorites);
+    };
+
+    updateFavorites();
+    window.addEventListener("storage", updateFavorites);
+
+    return () => {
+      window.removeEventListener("storage", updateFavorites);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    auth.signOut();
   };
 
   return (
-    <nav className="w-full bg-white shadow-sm relative">
-      <div className="container mx-auto mt-10 px-4 lg:px-10 flex justify-between items-center py-4 relative">
-        
-        {/* Search Box */}
-        <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 w-1/3 md:w-1/4">
-          <input
-            type="text"
-            placeholder="Search product"
-            className="w-full focus:outline-none text-gray-500 text-sm"
-          />
-          <FiSearch className="text-gray-700 cursor-pointer" size={18} />
-        </div>
+    <>
+      <nav className="w-full bg-white shadow-md z-[100]">
+        <div className="container mx-auto px-4 lg:px-10 py-4 flex flex-col items-center">
+          <div className="w-full flex items-center justify-between">
+            <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 w-1/2 md:w-1/6">
+              <input
+                type="text"
+                placeholder="Search product"
+                className="w-full focus:outline-none text-gray-500 text-sm"
+              />
+              <FiSearch className="text-gray-700 cursor-pointer" size={18} />
+            </div>
 
-        {/* Logo - Centered */}
-        <div className="absolute left-1/2 transform -translate-x-1/2">
-          <RouterLink to="/">
-            <img src={logo} alt="BeautyVerse Logo" className="h-14 md:h-16 w-auto object-contain" />
-          </RouterLink>
-        </div>
+            <RouterLink to="/">
+              <img
+                src={logo}
+                alt="BeautyVerse Logo"
+                className="h-14 md:h-16 w-auto object-contain"
+              />
+            </RouterLink>
 
-        {/* Icons */}
-        <div className="flex space-x-6">
-          <IonIcon icon={personOutline} size="large" className="cursor-pointer text-2xl" />
-          <IonIcon icon={starOutline} size="large" className="cursor-pointer text-2xl" />
-        </div>
-      </div>
+            <div className="flex space-x-6">
+              {user ? (
+                <>
+                  <RouterLink to="/profile">
+                    <IonIcon icon={personOutline} size="large" className="cursor-pointer text-2xl" />
+                  </RouterLink>
+                  <button onClick={handleLogout} className="text-red-500 font-bold">
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <button onClick={() => setIsLoginOpen(true)}>
+                  <IonIcon icon={personOutline} size="large" className="cursor-pointer text-2xl" />
+                </button>
+              )}
 
-      {/* Menu Links */}
-      <div className="py-6">
-        <ul className="flex justify-center space-x-10 py-3 text-lg font-bold">
-          <li className="cursor-pointer hover:text-gray-600">
-            <RouterLink to="/">Home</RouterLink>
-          </li>
-          <li className="cursor-pointer hover:text-gray-600">
-            <button onClick={() => handleNavigation("about-section")}>About</button>
-          </li>
-          <li className="cursor-pointer hover:text-gray-600">
-            <button onClick={() => handleNavigation("products-section")}>Products</button>
-          </li>
-          <li className="cursor-pointer hover:text-gray-600">
-            <button onClick={() => handleNavigation("faq-section")}>FAQ</button>
-          </li>
-          <li className="cursor-pointer hover:text-gray-600">
-          <button onClick={() => handleNavigation("blog-section")}>Blog</button>
-            
-          </li>
-          <li className="cursor-pointer hover:text-gray-600">
-            <button onClick={() => handleNavigation("footer-section")}>Contact Us</button>
-          </li>
-        </ul>
-      </div>
-    </nav>
+              {/* Favorites Icon */}
+              <button onClick={() => setIsFavoritesOpen(true)}>
+                <IonIcon icon={starOutline} size="large" className="cursor-pointer text-2xl" />
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap justify-center space-x-8 text-gray-700 font-semibold mt-4">
+            {["home", "about", "products", "scan", "features", "FAQ", "blog", "contact-us"].map((item) => (
+              <ScrollLink key={item} to={item} smooth={true} duration={500} className="cursor-pointer hover:text-blue-500">
+                {item.charAt(0).toUpperCase() + item.slice(1).replace("-", " ")}
+              </ScrollLink>
+            ))}
+          </div>
+        </div>
+      </nav>
+
+      {/* Favorites Modal */}
+      {isFavoritesOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[200]">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+            <button className="absolute top-2 right-2 text-gray-500" onClick={() => setIsFavoritesOpen(false)}>✖</button>
+            <h2 className="text-lg font-bold mb-4">Favorites</h2>
+
+            {favorites.length > 0 ? (
+              <table className="w-full border-collapse border border-gray-300">
+                <thead>
+                  <tr className="bg-gray-200">
+                    <th className="border border-gray-300 px-4 py-2">Product</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {favorites.map((item, index) => (
+                    <tr key={index} className="text-center">
+                      <td className="border border-gray-300 px-4 py-2">{item.name}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className="text-gray-500 text-center">No favorites added.</p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Login Modal */}
+      {isLoginOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[200]">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+            <button className="absolute top-2 right-2 text-gray-500" onClick={() => setIsLoginOpen(false)}>✖</button>
+            <Login />
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
