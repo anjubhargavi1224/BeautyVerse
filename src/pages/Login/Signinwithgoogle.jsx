@@ -38,7 +38,8 @@ function Signinwithgoogle() {
         }, 1500);
       }
     } catch (error) {
-      console.error("Google Sign-in Error:", error.message);
+      // Log the entire error object for detailed debugging
+      console.error("Google Sign-in Error:", error);
       toast.error("Google Sign-in Failed. Please try again.", {
         position: "bottom-center",
       });
